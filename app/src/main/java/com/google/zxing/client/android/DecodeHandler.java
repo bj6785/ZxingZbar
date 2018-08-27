@@ -82,7 +82,7 @@ final class DecodeHandler extends Handler {
      * @param height The height of the preview frame.
      */
     private void decode(byte[] data, int width, int height) {
-        long start = System.currentTimeMillis();
+//        long start = System.currentTimeMillis();
 
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
@@ -133,13 +133,11 @@ final class DecodeHandler extends Handler {
             Image barcode = new Image(width, height, "Y800");
             barcode.setData(data);
             Rect rect = activity.getCameraManager().getFramingRectInPreview();
-            if (rect != null) {
-                /*
-                    zbar 解码库,不需要将数据进行旋转,因此设置裁剪区域是的x为 top, y为left
-                    设置了裁剪区域,解码速度快了近5倍左右
-                 */
-                barcode.setCrop(rect.top, rect.left, rect.width(), rect.height());    // 设置截取区域，也就是你的扫描框在图片上的区域.
-            }
+            rect = activity.getCameraManager().getRotatedRect(rect);
+
+            //旋转截取区域
+            if (rect != null)
+                barcode.setCrop(rect.left, rect.top, rect.width(), rect.height());    // 设置截取区域，也就是你的扫描框在图片上的区域.
             ImageScanner mImageScanner = new ImageScanner();
             int result = mImageScanner.scanImage(barcode);
             if (result != 0) {
@@ -149,8 +147,8 @@ final class DecodeHandler extends Handler {
             }
         }
 
-        long end = System.currentTimeMillis();
-        Log.d(TAG, "Found barcode in " + (end - start) + " ms");
+//        long end = System.currentTimeMillis();
+//        Log.d(TAG, "Found barcode in " + (end - start) + " ms");
 
 
         Handler handler = activity.getHandler();

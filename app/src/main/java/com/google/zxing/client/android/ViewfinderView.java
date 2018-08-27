@@ -27,6 +27,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 import java.util.ArrayList;
@@ -40,6 +41,7 @@ import java.util.List;
  */
 public final class ViewfinderView extends View {
 
+    private static final String TAG = "ViewfinderView";
     private static final int[] SCANNER_ALPHA = {0, 64, 128, 192, 255, 192, 128, 64};
     private static final long ANIMATION_DELAY = 80L;
     private static final int CURRENT_POINT_OPACITY = 0xA0;
@@ -84,12 +86,15 @@ public final class ViewfinderView extends View {
             return; // not ready yet, early draw before done configuring
         }
         Rect frame = cameraManager.getFramingRect();
+//        Log.d(TAG, "frame: (" + frame.left + "," + frame.top +") ("+ frame.right + "," + frame.bottom +") " + " width:" + frame.width() + " height:" + frame.height());
+
         Rect previewFrame = cameraManager.getFramingRectInPreview();
+//        Log.d(TAG, "previewFrame: (" + previewFrame.left + "," + previewFrame.top +") ("+ previewFrame.right + "," + previewFrame.bottom +") " + " width:" + previewFrame.width() + " height:" + previewFrame.height());
         if (frame == null || previewFrame == null) {
             return;
         }
-        int width = canvas.getWidth();
-        int height = canvas.getHeight();
+        int width = canvas.getWidth(); // =720
+        int height = canvas.getHeight(); // =1280
 
         // Draw the exterior (i.e. outside the framing rect) darkened
         paint.setColor(resultBitmap != null ? resultColor : maskColor);
