@@ -42,10 +42,8 @@ public final class CameraManager {
 
     private static final String TAG = CameraManager.class.getSimpleName();
 
-    private static final int MIN_FRAME_WIDTH = 240;
-    private static final int MIN_FRAME_HEIGHT = 240;
-    private static final int MAX_FRAME_WIDTH = 1200; // = 5/8 * 1920
-    private static final int MAX_FRAME_HEIGHT = 675; // = 5/8 * 1080
+    private float widthRatio = 0.98f;//扫码框宽度占view总宽度的比例
+    private float heightWidthRatio = 0.6f;//扫码框的高宽比
 
     private final Context context;
     private final CameraConfigurationManager configManager;
@@ -223,16 +221,9 @@ public final class CameraManager {
                 return null;
             }
 
-            int width = findDesiredDimensionInRange(screenResolution.x, MIN_FRAME_WIDTH, MAX_FRAME_WIDTH);
-            int height = findDesiredDimensionInRange(screenResolution.y, MIN_FRAME_HEIGHT, MAX_FRAME_HEIGHT);
-
-
-            // add
-            width = width + 50;
-            height = width;
-            width = 700;
-            height = 300;
-            // end
+            // 扫码区域按照比率计算
+            int width = (int)(screenResolution.x * widthRatio);
+            int height = (int) (heightWidthRatio * width);
 
             int leftOffset = (screenResolution.x - width) / 2;
             int topOffset = (screenResolution.y - height) / 2;
@@ -240,17 +231,6 @@ public final class CameraManager {
             Log.d(TAG, "Calculated framing rect: " + framingRect);
         }
         return framingRect;
-    }
-
-    private static int findDesiredDimensionInRange(int resolution, int hardMin, int hardMax) {
-        int dim = 5 * resolution / 8; // Target 5/8 of each dimension
-        if (dim < hardMin) {
-            return hardMin;
-        }
-        if (dim > hardMax) {
-            return hardMax;
-        }
-        return dim;
     }
 
     /**
