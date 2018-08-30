@@ -8,6 +8,13 @@ android {
         applicationId "com.google.zxing.client.android"
         minSdkVersion 16
         targetSdkVersion 22
+
+        externalNativeBuild {
+            cmake {
+                cppFlags "-fexceptions" // -fexceptions编译选项方可编译带异常处理的C++代码
+                abiFilters "armeabi-v7a"
+            }
+        }
     }
 
     sourceSets.main {
@@ -27,10 +34,16 @@ android {
         }
     }
 
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+
 
 
     dependencies {
         compile fileTree(include: ['*.jar'], dir: 'libs')
-        compile 'com.android.support:appcompat-v7:24.2.1'
+        compile 'com.android.support:appcompat-v7:25.4.0'
     }
 }

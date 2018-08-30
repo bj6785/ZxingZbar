@@ -7,7 +7,7 @@ package com.google.zxing.client.android;
 public class DecodeHandlerJni {
 
     static{
-        System.loadLibrary("decodeHandler");
+        System.loadLibrary("dataHandler");
     }
 
     public static native byte[] dataHandler(byte[] by, int length, int width, int height);
