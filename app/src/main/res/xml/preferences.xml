@@ -88,12 +88,23 @@
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_general_title">
         <ListPreference
+            android:defaultValue="REAR"
+            android:entries="@array/preferences_switch_camera_options"
+            android:entryValues="@array/preferences_switch_camera_values"
+            android:key="preferences_switch_camera_mode"
+            android:summary="@string/preferences_front_light_summary"
+            android:title="@string/preferences_switch_camera_title"/>
+        <ListPreference
             android:defaultValue="OFF"
             android:entries="@array/preferences_front_light_options"
             android:entryValues="@array/preferences_front_light_values"
             android:key="preferences_front_light_mode"
             android:summary="@string/preferences_front_light_summary"
             android:title="@string/preferences_front_light_title"/>
+        <CheckBoxPreference
+            android:defaultValue="false"
+            android:key="preferences_full_screen_decode"
+            android:title="@string/preferences_full_screen_decode_title"/>
         <CheckBoxPreference
             android:defaultValue="true"
             android:key="preferences_auto_focus"

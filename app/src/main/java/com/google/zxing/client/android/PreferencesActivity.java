@@ -41,7 +41,9 @@ public final class PreferencesActivity extends Activity {
   public static final String KEY_PLAY_BEEP = "preferences_play_beep";
   public static final String KEY_VIBRATE = "preferences_vibrate";
   public static final String KEY_COPY_TO_CLIPBOARD = "preferences_copy_to_clipboard";
+  public static final String KEY_SWITCH_CAMERA_MODE = "preferences_switch_camera_mode";
   public static final String KEY_FRONT_LIGHT_MODE = "preferences_front_light_mode";
+  public static final String KEY_FULL_SCREEN_DECODE_MODE = "preferences_full_screen_decode";
   public static final String KEY_BULK_MODE = "preferences_bulk_mode";
   public static final String KEY_REMEMBER_DUPLICATES = "preferences_remember_duplicates";
   public static final String KEY_ENABLE_HISTORY = "preferences_history";

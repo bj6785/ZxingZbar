@@ -222,7 +222,7 @@ public final class CameraManager {
             }
 
             // 扫码区域按照比率计算
-            int width = (int)(screenResolution.x * widthRatio);
+            int width = (int) (screenResolution.x * widthRatio);
             int height = (int) (heightWidthRatio * width);
 
             int leftOffset = (screenResolution.x - width) / 2;
@@ -350,14 +350,19 @@ public final class CameraManager {
      * @param height The height of the image.
      * @return A PlanarYUVLuminanceSource instance.
      */
-    public PlanarYUVLuminanceSource buildLuminanceSource(byte[] data, int width, int height) {
-        Rect rect = getFramingRectInPreview();
-        if (rect == null) {
-            return null;
+    public PlanarYUVLuminanceSource buildLuminanceSource(byte[] data, int width, int height, boolean isFullScreenDecode) {
+        if (!isFullScreenDecode) {
+            Rect rect = getFramingRectInPreview();
+            if (rect == null) {
+                return null;
+            }
+            // Go ahead and assume it's YUV rather than die.
+            return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
+                    rect.width(), rect.height(), false);
+        } else {
+            return new PlanarYUVLuminanceSource(data, width, height, 0, 0,
+                    width, height, false);
         }
-        // Go ahead and assume it's YUV rather than die.
-        return new PlanarYUVLuminanceSource(data, width, height, rect.left, rect.top,
-                rect.width(), rect.height(), false);
     }
 
 }

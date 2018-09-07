@@ -50,11 +50,15 @@ final class DecodeHandler extends Handler {
     private final CaptureActivity activity;
     private final MultiFormatReader multiFormatReader;
     private boolean running = true;
+    private boolean isFullScreenDecode;
 
     DecodeHandler(CaptureActivity activity, Map<DecodeHintType, Object> hints) {
         multiFormatReader = new MultiFormatReader();
         multiFormatReader.setHints(hints);
         this.activity = activity;
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
+        isFullScreenDecode = prefs.getBoolean(PreferencesActivity.KEY_FULL_SCREEN_DECODE_MODE, false);
     }
 
     @Override
@@ -83,7 +87,6 @@ final class DecodeHandler extends Handler {
      */
     private void decode(byte[] data, int width, int height) {
 //        long start = System.currentTimeMillis();
-
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         String resultQRcode = null;
@@ -114,7 +117,7 @@ final class DecodeHandler extends Handler {
             height = tmp;
 
             Result rawResult = null;
-            PlanarYUVLuminanceSource source = activity.getCameraManager().buildLuminanceSource(data, width, height);
+            PlanarYUVLuminanceSource source = activity.getCameraManager().buildLuminanceSource(data, width, height, isFullScreenDecode);
             if (source != null) {
                 BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
                 try {
@@ -132,12 +135,13 @@ final class DecodeHandler extends Handler {
         } else {
             Image barcode = new Image(width, height, "Y800");
             barcode.setData(data);
-            Rect rect = activity.getCameraManager().getFramingRectInPreview();
-            rect = activity.getCameraManager().getRotatedRect(rect);
-
-            //旋转截取区域
-            if (rect != null)
-                barcode.setCrop(rect.left, rect.top, rect.width(), rect.height());    // 设置截取区域，也就是你的扫描框在图片上的区域.
+            if (!isFullScreenDecode) {
+                Rect rect = activity.getCameraManager().getFramingRectInPreview();
+                rect = activity.getCameraManager().getRotatedRect(rect);
+                //旋转截取区域
+                if (rect != null)
+                    barcode.setCrop(rect.left, rect.top, rect.width(), rect.height());    // 设置截取区域，也就是你的扫描框在图片上的区域.
+            }
             ImageScanner mImageScanner = new ImageScanner();
             int result = mImageScanner.scanImage(barcode);
             if (result != 0) {

@@ -21,11 +21,13 @@ import com.google.zxing.client.android.camera.CameraManager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -58,10 +60,13 @@ public final class ViewfinderView extends View {
     private int scannerAlpha;
     private List<ResultPoint> possibleResultPoints;
     private List<ResultPoint> lastPossibleResultPoints;
+    private Context content;
+    private boolean fullScreenDecode;
 
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
+        this.content = context;
 
         // Initialize these once for performance rather than calling them every time in onDraw().
         paint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -74,6 +79,9 @@ public final class ViewfinderView extends View {
         scannerAlpha = 0;
         possibleResultPoints = new ArrayList<>(5);
         lastPossibleResultPoints = null;
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        fullScreenDecode = prefs.getBoolean(PreferencesActivity.KEY_FULL_SCREEN_DECODE_MODE, false);
     }
 
     public void setCameraManager(CameraManager cameraManager) {
@@ -97,68 +105,70 @@ public final class ViewfinderView extends View {
         int width = canvas.getWidth(); // =720
         int height = canvas.getHeight(); // =1280
 
-        // Draw the exterior (i.e. outside the framing rect) darkened
-        paint.setColor(maskColor);
-        canvas.drawRect(0, 0, width, frame.top, paint);
-        canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
-        canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, paint);
-        canvas.drawRect(0, frame.bottom + 1, width, height, paint);
+        if (!fullScreenDecode) {
+            // Draw the exterior (i.e. outside the framing rect) darkened
+            paint.setColor(maskColor);
+            canvas.drawRect(0, 0, width, frame.top, paint);
+            canvas.drawRect(0, frame.top, frame.left, frame.bottom + 1, paint);
+            canvas.drawRect(frame.right + 1, frame.top, width, frame.bottom + 1, paint);
+            canvas.drawRect(0, frame.bottom + 1, width, height, paint);
 
-        // Draw finderview border
-        paintborder.setColor(borderColor);
-        paintborder.setStyle(Paint.Style.STROKE);
-        paintborder.setStrokeWidth(3);
-        canvas.drawRect(frame, paintborder);
+            // Draw finderview border
+            paintborder.setColor(borderColor);
+            paintborder.setStyle(Paint.Style.STROKE);
+            paintborder.setStrokeWidth(3);
+            canvas.drawRect(frame, paintborder);
 
-        // Draw a red "laser scanner" line through the middle to show decoding is active
-        paint.setColor(laserColor);
-        paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
-        scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
-        int middle = frame.height() / 2 + frame.top;
-        canvas.drawRect(frame.left + 2, middle - 1, frame.right - 1, middle + 2, paint);
+            // Draw a red "laser scanner" line through the middle to show decoding is active
+            paint.setColor(laserColor);
+            paint.setAlpha(SCANNER_ALPHA[scannerAlpha]);
+            scannerAlpha = (scannerAlpha + 1) % SCANNER_ALPHA.length;
+            int middle = frame.height() / 2 + frame.top;
+            canvas.drawRect(frame.left + 2, middle - 1, frame.right - 1, middle + 2, paint);
 
-        float scaleX = frame.width() / (float) previewFrame.width();
-        float scaleY = frame.height() / (float) previewFrame.height();
+            float scaleX = frame.width() / (float) previewFrame.width();
+            float scaleY = frame.height() / (float) previewFrame.height();
 
-        List<ResultPoint> currentPossible = possibleResultPoints;
-        List<ResultPoint> currentLast = lastPossibleResultPoints;
-        int frameLeft = frame.left;
-        int frameTop = frame.top;
-        if (currentPossible.isEmpty()) {
-            lastPossibleResultPoints = null;
-        } else {
-            possibleResultPoints = new ArrayList<>(5);
-            lastPossibleResultPoints = currentPossible;
-            paint.setAlpha(CURRENT_POINT_OPACITY);
-            paint.setColor(resultPointColor);
-            synchronized (currentPossible) {
-                for (ResultPoint point : currentPossible) {
-                    canvas.drawCircle(frameLeft + (int) (point.getX() * scaleX),
-                            frameTop + (int) (point.getY() * scaleY),
-                            POINT_SIZE, paint);
+            List<ResultPoint> currentPossible = possibleResultPoints;
+            List<ResultPoint> currentLast = lastPossibleResultPoints;
+            int frameLeft = frame.left;
+            int frameTop = frame.top;
+            if (currentPossible.isEmpty()) {
+                lastPossibleResultPoints = null;
+            } else {
+                possibleResultPoints = new ArrayList<>(5);
+                lastPossibleResultPoints = currentPossible;
+                paint.setAlpha(CURRENT_POINT_OPACITY);
+                paint.setColor(resultPointColor);
+                synchronized (currentPossible) {
+                    for (ResultPoint point : currentPossible) {
+                        canvas.drawCircle(frameLeft + (int) (point.getX() * scaleX),
+                                frameTop + (int) (point.getY() * scaleY),
+                                POINT_SIZE, paint);
+                    }
                 }
             }
-        }
-        if (currentLast != null) {
-            paint.setAlpha(CURRENT_POINT_OPACITY / 2);
-            paint.setColor(resultPointColor);
-            synchronized (currentLast) {
-                float radius = POINT_SIZE / 2.0f;
-                for (ResultPoint point : currentLast) {
-                    canvas.drawCircle(frameLeft + (int) (point.getX() * scaleX),
-                            frameTop + (int) (point.getY() * scaleY),
-                            radius, paint);
+            if (currentLast != null) {
+                paint.setAlpha(CURRENT_POINT_OPACITY / 2);
+                paint.setColor(resultPointColor);
+                synchronized (currentLast) {
+                    float radius = POINT_SIZE / 2.0f;
+                    for (ResultPoint point : currentLast) {
+                        canvas.drawCircle(frameLeft + (int) (point.getX() * scaleX),
+                                frameTop + (int) (point.getY() * scaleY),
+                                radius, paint);
+                    }
                 }
             }
-        }
 
-        // Request another update at the animation interval, but only repaint the laser line,
-        // not the entire viewfinder mask.
-        postInvalidateDelayed(ANIMATION_DELAY,
-                frame.left - POINT_SIZE,
-                frame.top - POINT_SIZE,
-                frame.right + POINT_SIZE,
-                frame.bottom + POINT_SIZE);
+            // Request another update at the animation interval, but only repaint the laser line,
+            // not the entire viewfinder mask.
+            postInvalidateDelayed(ANIMATION_DELAY,
+                    frame.left - POINT_SIZE,
+                    frame.top - POINT_SIZE,
+                    frame.right + POINT_SIZE,
+                    frame.bottom + POINT_SIZE);
+        }
     }
 
     public void addPossibleResultPoint(ResultPoint point) {

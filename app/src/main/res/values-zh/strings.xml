@@ -87,6 +87,7 @@
   <string name="msg_sure">确定吗？</string>
   <string name="msg_unmount_usb">抱歉，无法访问 SD 卡。</string>
   <string name="preferences_actions_title">扫描成功</string>
+  <string name="preferences_full_screen_decode_title">全屏解码</string>
   <string name="preferences_auto_focus_title">自动对焦</string>
   <string name="preferences_auto_open_web_title">自动打开网页</string>
   <string name="preferences_bulk_mode_summary">连续扫描并保存多个条码</string>
@@ -109,6 +110,10 @@
   <string name="preferences_front_light_auto">自动</string>
   <string name="preferences_front_light_off">关</string>
   <string name="preferences_front_light_on">开</string>
+  <string name="preferences_switch_camera_summary">选择使用前置或者后置摄像头进行扫码</string>
+  <string name="preferences_switch_camera_title">选择摄像头</string>
+  <string name="preferences_switch_camera_front_on">打开前置摄像头</string>
+  <string name="preferences_switch_camera_rear_on">打开后置摄像头</string>
   <string name="preferences_front_light_summary">设置闪光灯模式</string>
   <string name="preferences_front_light_title">闪光灯</string>
   <string name="preferences_general_title">扫描设置</string>

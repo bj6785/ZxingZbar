@@ -87,6 +87,7 @@
   <string name="msg_sure">Are you sure?</string>
   <string name="msg_unmount_usb">Sorry, the SD card is not accessible.</string>
   <string name="preferences_actions_title">When a barcode is found\u2026</string>
+  <string name="preferences_full_screen_decode_title">decode full screen</string>
   <string name="preferences_auto_focus_title">Use auto focus</string>
   <string name="preferences_auto_open_web_title">Open web pages automatically</string>
   <string name="preferences_bulk_mode_summary">Scan and save many barcodes continuously</string>
@@ -106,6 +107,10 @@
   <string name="preferences_disable_continuous_focus_title">No continuous focus</string>
   <string name="preferences_disable_exposure_title">No exposure</string>
   <string name="preferences_disable_metering_title">No metering</string>
+  <string name="preferences_switch_camera_summary">Select front or rear camera to scanner</string>
+  <string name="preferences_switch_camera_title">Select camera</string>
+  <string name="preferences_switch_camera_front_on">Start front camera</string>
+  <string name="preferences_switch_camera_rear_on">Start rear camera</string>
   <string name="preferences_front_light_summary">Improves scanning in low light on some phones, but may cause glare. Does not work on all phones.</string>
   <string name="preferences_front_light_title">Use front light</string>
   <string name="preferences_front_light_auto">Automatic</string>

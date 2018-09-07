@@ -60,13 +60,19 @@
     <item>@string/preferences_front_light_off</item>
   </string-array>
 
-
+  <string-array name="preferences_switch_camera_values" tools:ignore="MissingTranslation">
+    <item>FRONT</item>
+    <item>REAR</item>
+  </string-array>
+  <string-array name="preferences_switch_camera_options">
+    <item>@string/preferences_switch_camera_front_on</item>
+    <item>@string/preferences_switch_camera_rear_on</item>
+  </string-array>
 
   <string-array name="preferences_decoder_values" tools:ignore="MissingTranslation">
     <item>Zxing</item>
     <item>Zbar</item>
   </string-array>
-
   <string-array name="preferences_decoder_options">
     <item>@string/decoder_zxing</item>
     <item>@string/decoder_zbar</item>

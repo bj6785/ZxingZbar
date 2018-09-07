@@ -189,6 +189,11 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
         copyToClipboard = prefs.getBoolean(PreferencesActivity.KEY_COPY_TO_CLIPBOARD, true)
                 && (intent == null || intent.getBooleanExtra(Intents.Scan.SAVE_HISTORY, true));
+        String cameraDirection = prefs.getString(PreferencesActivity.KEY_SWITCH_CAMERA_MODE, "REAR");
+        if (cameraDirection.equals("REAR"))
+            cameraManager.setManualCameraId(0);
+        else
+            cameraManager.setManualCameraId(1);
 
         source = IntentSource.NONE;
         sourceUrl = null;
