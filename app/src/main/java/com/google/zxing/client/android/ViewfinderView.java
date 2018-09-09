@@ -63,6 +63,10 @@ public final class ViewfinderView extends View {
     private Context content;
     private boolean fullScreenDecode;
 
+    public void setFullScreenDecode(boolean fullScreenDecode) {
+        this.fullScreenDecode = fullScreenDecode;
+    }
+
     // This constructor is used when the class is built from an XML resource.
     public ViewfinderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -79,9 +83,6 @@ public final class ViewfinderView extends View {
         scannerAlpha = 0;
         possibleResultPoints = new ArrayList<>(5);
         lastPossibleResultPoints = null;
-
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
-        fullScreenDecode = prefs.getBoolean(PreferencesActivity.KEY_FULL_SCREEN_DECODE_MODE, false);
     }
 
     public void setCameraManager(CameraManager cameraManager) {

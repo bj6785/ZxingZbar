@@ -177,6 +177,9 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         }
 
+        boolean fullScreenDecode = prefs.getBoolean(PreferencesActivity.KEY_FULL_SCREEN_DECODE_MODE, false);
+        viewfinderView.setFullScreenDecode(fullScreenDecode);
+
         resetStatusView();
 
 
