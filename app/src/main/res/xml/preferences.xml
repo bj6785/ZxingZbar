@@ -92,7 +92,7 @@
             android:entries="@array/preferences_switch_camera_options"
             android:entryValues="@array/preferences_switch_camera_values"
             android:key="preferences_switch_camera_mode"
-            android:summary="@string/preferences_front_light_summary"
+            android:summary="@string/preferences_switch_camera_summary"
             android:title="@string/preferences_switch_camera_title"/>
         <ListPreference
             android:defaultValue="OFF"
