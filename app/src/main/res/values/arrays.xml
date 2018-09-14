@@ -69,6 +69,15 @@
     <item>@string/preferences_switch_camera_rear_on</item>
   </string-array>
 
+  <string-array name="preferences_orientation_values" tools:ignore="MissingTranslation">
+    <item>PORTRAIT</item>
+    <item>LANDSCAPE</item>
+  </string-array>
+  <string-array name="preferences_orientation_options">
+    <item>@string/preferences_orientation_option_portrait</item>
+    <item>@string/preferences_orientation_option_landscape</item>
+  </string-array>
+
   <string-array name="preferences_decoder_values" tools:ignore="MissingTranslation">
     <item>Zxing</item>
     <item>Zbar</item>

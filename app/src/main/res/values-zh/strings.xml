@@ -114,6 +114,8 @@
   <string name="preferences_switch_camera_title">选择摄像头</string>
   <string name="preferences_switch_camera_front_on">打开前置摄像头</string>
   <string name="preferences_switch_camera_rear_on">打开后置摄像头</string>
+  <string name="preferences_orientation_option_portrait">肖像模式</string>
+  <string name="preferences_orientation_option_landscape">风景模式</string>
   <string name="preferences_front_light_summary">设置闪光灯模式</string>
   <string name="preferences_front_light_title">闪光灯</string>
   <string name="preferences_general_title">扫描设置</string>
@@ -121,8 +123,9 @@
   <string name="preferences_history_title">存入历史记录</string>
   <string name="preferences_invert_scan_summary">扫描黑色背景上的白色条码。仅适用于部分设备。</string>
   <string name="preferences_invert_scan_title">反色</string>
+  <string name="preferences_orientation_summary">设置应用显示时的方向.</string>
   <string name="preferences_name">选项</string>
-  <string name="preferences_orientation_title">不自动旋转</string>
+  <string name="preferences_orientation_title">设置横竖显示模式</string>
   <string name="preferences_play_beep_title">播放提示音</string>
   <string name="preferences_remember_duplicates_summary">在历史记录中保存重复的记录</string>
   <string name="preferences_remember_duplicates_title">保存重复记录</string>

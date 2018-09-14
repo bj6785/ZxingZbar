@@ -115,13 +115,16 @@
             android:summary="@string/preferences_invert_scan_summary"
             android:title="@string/preferences_invert_scan_title"/>
         <CheckBoxPreference
-            android:defaultValue="false"
+            android:defaultValue="true"
             android:key="preferences_bulk_mode"
             android:summary="@string/preferences_bulk_mode_summary"
             android:title="@string/preferences_bulk_mode_title"/>
-        <CheckBoxPreference
-            android:defaultValue="true"
+        <ListPreference
+            android:defaultValue="PORTRAIT"
+            android:entries="@array/preferences_orientation_options"
+            android:entryValues="@array/preferences_orientation_values"
             android:key="preferences_orientation"
+            android:summary="@string/preferences_orientation_summary"
             android:title="@string/preferences_orientation_title"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/preferences_result_title">

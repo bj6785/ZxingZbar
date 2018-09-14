@@ -111,6 +111,8 @@
   <string name="preferences_switch_camera_title">Select camera</string>
   <string name="preferences_switch_camera_front_on">Start front camera</string>
   <string name="preferences_switch_camera_rear_on">Start rear camera</string>
+  <string name="preferences_orientation_option_portrait">portrait mode</string>
+  <string name="preferences_orientation_option_landscape">landscape mode</string>
   <string name="preferences_front_light_summary">Improves scanning in low light on some phones, but may cause glare. Does not work on all phones.</string>
   <string name="preferences_front_light_title">Use front light</string>
   <string name="preferences_front_light_auto">Automatic</string>
@@ -120,9 +122,10 @@
   <string name="preferences_history_summary">Store your scans in History</string>
   <string name="preferences_history_title">Add to History</string>
   <string name="preferences_invert_scan_title">Invert scan</string>
-  <string name="preferences_invert_scan_summary">Scan for white barcodes on black background. Not available on some devices.</string>  
+  <string name="preferences_invert_scan_summary">Scan for white barcodes on black background. Not available on some devices.</string>
+  <string name="preferences_orientation_summary">Set app display orientation.</string>
   <string name="preferences_name">Settings</string>
-  <string name="preferences_orientation_title">No automatic rotation</string>
+  <string name="preferences_orientation_title">Set orientation</string>
   <string name="preferences_play_beep_title">Beep</string>
   <string name="preferences_remember_duplicates_summary">Store multiple scans of the same barcode in History</string>
   <string name="preferences_remember_duplicates_title">Remember duplicates</string>

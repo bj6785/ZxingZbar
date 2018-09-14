@@ -17,6 +17,7 @@
 package com.google.zxing.client.android;
 
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -86,35 +87,40 @@ final class DecodeHandler extends Handler {
      * @param height The height of the preview frame.
      */
     private void decode(byte[] data, int width, int height) {
-//        long start = System.currentTimeMillis();
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(activity);
         String resultQRcode = null;
 
         if (DecoderMode.readPref(prefs) == DecoderMode.Zxing) { //如果扫描模式是Zxing
-//            // --- add java进行数组的转换 速度很慢
-//            byte[] rotatedData = new byte[data.length];
-//            for (int y = 0; y < height; y++) {
-//                for (int x = 0; x < width; x++)
-//                    rotatedData[x * height + height - y - 1] = data[x + y * width];
-//            }
-//            int tmp = width;
-//            width = height;
-//            height = tmp;
-//            data = rotatedData;
-//            Log.d(TAG, "数组转换用时: " + (System.currentTimeMillis() - start));
-//            //--- end
 
+            // 人像模式需要转换图像90度
+            if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                /*
+                 因为相机传感器捕获的数据是横向的, 所以需要将数据进行90度的旋转,
+                 用java进行转换在红米三手机测试大概需要600ms左右,
+                 因此换了C语言, 只需要35ms左右,速度快了接近20倍
+                 */
 
-            /*
-              因为相机传感器捕获的数据是横向的, 所以需要将数据进行90度的旋转, 用java进行转换在红米三手机测试大概需要 600ms左右
-              因此换了C语言, 只需要 35ms左右 速度快了接近 20倍
-             */
-            data = DecodeHandlerJni.dataHandler(data, data.length, width, height);
-            //Log.d(TAG, "数组转换用时: " + (System.currentTimeMillis() - start));
-            int tmp = width;
-            width = height;
-            height = tmp;
+                // --- add java进行数组的转换 速度很慢
+//                byte[] rotatedData = new byte[data.length];
+//                for (int y = 0; y < height; y++) {
+//                    for (int x = 0; x < width; x++)
+//                        rotatedData[x * height + height - y - 1] = data[x + y * width];
+//                }
+//                int tmp = width;
+//                width = height;
+//                height = tmp;
+//                data = rotatedData;
+//                Log.d(TAG, "数组转换用时: " + (System.currentTimeMillis() - start));
+                //--- end
+
+                // --- add C进行数组的转换 速度很快
+                data = DecodeHandlerJni.dataHandler(data, data.length, width, height);
+                //--- end
+                int tmp = width;
+                width = height;
+                height = tmp;
+            }
 
             Result rawResult = null;
             PlanarYUVLuminanceSource source = activity.getCameraManager().buildLuminanceSource(data, width, height, isFullScreenDecode);
@@ -137,7 +143,9 @@ final class DecodeHandler extends Handler {
             barcode.setData(data);
             if (!isFullScreenDecode) {
                 Rect rect = activity.getCameraManager().getFramingRectInPreview();
-                rect = activity.getCameraManager().getRotatedRect(rect);
+                if (activity.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                    rect = activity.getCameraManager().getRotatedRect(rect);
+                }
                 //旋转截取区域
                 if (rect != null)
                     barcode.setCrop(rect.left, rect.top, rect.width(), rect.height());    // 设置截取区域，也就是你的扫描框在图片上的区域.

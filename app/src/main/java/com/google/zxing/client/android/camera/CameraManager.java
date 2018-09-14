@@ -17,6 +17,7 @@
 package com.google.zxing.client.android.camera;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.hardware.Camera;
@@ -42,8 +43,11 @@ public final class CameraManager {
 
     private static final String TAG = CameraManager.class.getSimpleName();
 
-    private float widthRatio = 0.98f;//扫码框宽度占view总宽度的比例
-    private float heightWidthRatio = 0.6f;//扫码框的高宽比
+    private float portraitWidthRatio = 0.98f;//扫码框宽度占view总宽度的比例
+    private float portraitHeightWidthRatio = 0.6f;//扫码框的高宽比
+
+    private float landscapeHeightRatio = 0.75f;//扫码框宽度占view总宽度的比例
+    private float landscapeHeightWidthRatio = 1.8f;//扫码框的高宽比
 
     private final Context context;
     private final CameraConfigurationManager configManager;
@@ -216,14 +220,21 @@ public final class CameraManager {
                 return null;
             }
             Point screenResolution = configManager.getScreenResolution();
+            Log.d(TAG, "screenResolution rect: " + screenResolution);
             if (screenResolution == null) {
                 // Called early, before init even finished
                 return null;
             }
 
+            int width, height;
             // 扫码区域按照比率计算
-            int width = (int) (screenResolution.x * widthRatio);
-            int height = (int) (heightWidthRatio * width);
+            if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                width = (int) (screenResolution.x * portraitWidthRatio);
+                height = (int) (width * portraitHeightWidthRatio);
+            } else {
+                height = (int) (screenResolution.y * landscapeHeightRatio);
+                width = (int) (height * landscapeHeightWidthRatio);
+            }
 
             int leftOffset = (screenResolution.x - width) / 2;
             int topOffset = (screenResolution.y - height) / 2;
@@ -252,16 +263,18 @@ public final class CameraManager {
                 // Called early, before init even finished
                 return null;
             }
-//      rect.left = rect.left * cameraResolution.x / screenResolution.x;
-//      rect.right = rect.right * cameraResolution.x / screenResolution.x;
-//      rect.top = rect.top * cameraResolution.y / screenResolution.y;
-//      rect.bottom = rect.bottom * cameraResolution.y / screenResolution.y;
 
-
-            rect.left = rect.left * cameraResolution.y / screenResolution.x;
-            rect.right = rect.right * cameraResolution.y / screenResolution.x;
-            rect.top = rect.top * cameraResolution.x / screenResolution.y;
-            rect.bottom = rect.bottom * cameraResolution.x / screenResolution.y;
+            if (context.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                rect.left = rect.left * cameraResolution.y / screenResolution.x;
+                rect.right = rect.right * cameraResolution.y / screenResolution.x;
+                rect.top = rect.top * cameraResolution.x / screenResolution.y;
+                rect.bottom = rect.bottom * cameraResolution.x / screenResolution.y;
+            } else {
+                rect.left = rect.left * cameraResolution.x / screenResolution.x;
+                rect.right = rect.right * cameraResolution.x / screenResolution.x;
+                rect.top = rect.top * cameraResolution.y / screenResolution.y;
+                rect.bottom = rect.bottom * cameraResolution.y / screenResolution.y;
+            }
 
             framingRectInPreview = rect;
         }

@@ -171,11 +171,8 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 
-        if (prefs.getBoolean(PreferencesActivity.KEY_DISABLE_AUTO_ORIENTATION, true)) {
-            setRequestedOrientation(getCurrentOrientation());
-        } else {
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
-        }
+        String dispOrientation = prefs.getString(PreferencesActivity.KEY_ORIENTATION_OF_DISPLAY, "PORTRAIT");
+        setRequestedOrientation(getCurrentOrientation(dispOrientation));
 
         boolean fullScreenDecode = prefs.getBoolean(PreferencesActivity.KEY_FULL_SCREEN_DECODE_MODE, false);
         viewfinderView.setFullScreenDecode(fullScreenDecode);
@@ -275,9 +272,10 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         }
     }
 
-    private int getCurrentOrientation() {
+    private int getCurrentOrientation(String dispOrientation) {
         int rotation = getWindowManager().getDefaultDisplay().getRotation();
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+//        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+        if (dispOrientation.equals("LANDSCAPE")) {
             switch (rotation) {
                 case Surface.ROTATION_0:
                 case Surface.ROTATION_90:
@@ -447,6 +445,7 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
 
     /**
      * 解码成功的回调
+     *
      * @param result
      */
     public void handleDecode(String result) {
@@ -462,14 +461,12 @@ public final class CaptureActivity extends Activity implements SurfaceHolder.Cal
         }
 
 
-//        //判断是否连续扫描, 如果需要连续扫描, 需要调用 restartPreviewAfterDelay
-//        //连接扫描可以使用广播进行发送实现
-//        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-//        if (fromLiveScan && prefs.getBoolean(KEY_BULK_MODE, false)) {
-//            restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
-//        }
-
-        restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
+        //判断是否连续扫描, 如果需要连续扫描, 需要调用 restartPreviewAfterDelay
+        //连接扫描可以使用广播进行发送实现
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (fromLiveScan && prefs.getBoolean(KEY_BULK_MODE, false)) {
+            restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
+        }
         Toast.makeText(this, result, Toast.LENGTH_SHORT).show();
     }
 
