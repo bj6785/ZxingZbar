@@ -101,21 +101,21 @@ final class DecodeHandler extends Handler {
                  因此换了C语言, 只需要35ms左右,速度快了接近20倍
                  */
 
-                // --- add java进行数组的转换 速度很慢
+//                long start = System.currentTimeMillis();
+//                // --- add java进行数组的转换 速度很慢
 //                byte[] rotatedData = new byte[data.length];
 //                for (int y = 0; y < height; y++) {
 //                    for (int x = 0; x < width; x++)
 //                        rotatedData[x * height + height - y - 1] = data[x + y * width];
 //                }
-//                int tmp = width;
-//                width = height;
-//                height = tmp;
 //                data = rotatedData;
 //                Log.d(TAG, "数组转换用时: " + (System.currentTimeMillis() - start));
                 //--- end
 
                 // --- add C进行数组的转换 速度很快
+//                long start = System.currentTimeMillis();
                 data = DecodeHandlerJni.dataHandler(data, data.length, width, height);
+//                Log.d(TAG, "C转换用时: " + (System.currentTimeMillis() - start));
                 //--- end
                 int tmp = width;
                 width = height;
